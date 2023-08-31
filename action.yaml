@@ -4,16 +4,25 @@ inputs:
   FEATURES_LEVEL_LOG:
     description: "Log Level"
     required: true
-  INPUT_PATH:
+  input_path:
     description: "Input file name"
     required: true
 
 runs:
-  using: "docker"
-  image: "Dockerfile"
-  args:
-    - ${{ inputs.FEATURES_LEVEL_LOG }}
-    - ${{ inputs.INPUT_PATH }}
+  using: "composite"
+  steps:
+
+    - name: Check Runner
+      run: echo 🤖 OS runner is $(uname)
+      shell: bash
+      
+    - name: Run Runtime Action Destroy
+      run: |
+        docker run --rm \
+        -e FEATURES_LEVEL_LOG=${{ inputs.FEATURES_LEVEL_LOG }} \
+        --entrypoint=/app/stackspot-runtime-job-destroy \
+        stackspot/runtime-destroy start --input-path=${{ inputs.input_path }}
+      shell: bash
 
 branding:
     icon: 'terminal'
