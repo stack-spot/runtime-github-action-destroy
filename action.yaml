@@ -1,0 +1,20 @@
+name: "Run Runtime Action Destroy"
+description: "Runs Runtime Action Destroy with parameters"
+inputs:
+  FEATURES_LEVEL_LOG:
+    description: "Log Level"
+    required: true
+  INPUT_PATH:
+    description: "Input file name"
+    required: true
+
+runs:
+  using: "docker"
+  image: "Dockerfile"
+  args:
+    - ${{ inputs.FEATURES_LEVEL_LOG }}
+    - ${{ inputs.INPUT_PATH }}
+
+branding:
+    icon: 'terminal'
+    color: 'orange'

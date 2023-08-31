@@ -1,0 +1,26 @@
+name: Action Test Ubuntu
+
+on:
+  push:
+    paths:
+      - '.github/workflows/action-test-ubuntu.yaml'
+      - 'action.yaml'
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+      
+    - name: Run Runtime Destroy Action
+      uses: stack-spot/runtime-github-action-destroy@main
+      with:
+        FEATURES_LEVEL_LOG: debug
+        INPUT_PATH: destroy.yaml
