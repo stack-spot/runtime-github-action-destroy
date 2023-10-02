@@ -1,4 +1,4 @@
-# runtime-github-action-destroy
+# runtime-destroy-action
 
 [![Action test Ubuntu](https://github.com/stack-spot/runtime-github-action-ping/actions/workflows/action-test-ubuntu.yaml/badge.svg)](https://github.com/stack-spot/runtime-github-action-ping/actions/workflows/action-test-ubuntu.yaml)
 
@@ -27,7 +27,7 @@ jobs:
     steps:
       - name: Worker IAC
         if: contains( matrix.task.taskType , 'DESTROY')
-        uses: stack-spot/runtime-github-action-destroy@v1
+        uses: stack-spot/runtime-destroy-action@v1
         with:
           FEATURES_LEVEL_LOG: debug
           CLIENT_ID: ${{ secrets.CLIENT_ID }}
