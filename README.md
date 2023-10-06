@@ -46,9 +46,9 @@ jobs:
 ## ▶️ Action Inputs
 
 Field | Mandatory | Observation
------------- | ------------  | ------------- | -------------
+------------ | ------------  | -------------
 **CLIENT_ID** | YES | [StackSpot](https://stackspot.com/en/settings/access-token) Client ID.
-**CLIENT_KEY** | YES |[StackSpot](https://stackspot.com/en/settings/access-token) Client KEY.
+**CLIENT_KEY** | YES | [StackSpot](https://stackspot.com/en/settings/access-token) Client KEY.
 **CLIENT_REALM** | YES | [StackSpot](https://stackspot.com/en/settings/access-token) Client Realm.
 **AWS_ACCESS_KEY_ID** | YES | [AWS](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-envvars.html) Access Key ID
 **AWS_SECRET_ACCESS_KEY** | YES | [AWS](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-envvars.html) Secret Access Key
