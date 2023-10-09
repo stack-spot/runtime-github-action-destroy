@@ -45,14 +45,14 @@ runs:
       
     - name: Configure aws credentials
       id: aws-cred
-      if: ${{ inputs.ROLE_ARN != 0 }}
+      if: ${{ inputs.AWS_ROLE_ARN != 0 }}
       uses: aws-actions/configure-aws-credentials@v3
       with:
-        role-to-assume: ${{ inputs.ROLE_ARN }}
+        role-to-assume: ${{ inputs.AWS_ROLE_ARN }}
         aws-region: ${{ inputs.AWS_REGION }}
       
     - name: Run Runtime Action Deploy
-      if: ${{ inputs.ROLE_ARN == 0 }}
+      if: ${{ inputs.AWS_ROLE_ARN == 0 }}
       run: |
         docker run --rm \
         -e FEATURES_LEVEL_LOG=${{ inputs.FEATURES_LEVEL_LOG }} \
@@ -75,7 +75,7 @@ runs:
       shell: bash
 
     - name: Run Runtime Action Deploy
-      if: ${{ inputs.ROLE_ARN != 0 }}
+      if: ${{ inputs.AWS_ROLE_ARN != 0 }}
       run: |
         docker run --rm \
         -e FEATURES_LEVEL_LOG=${{ inputs.FEATURES_LEVEL_LOG }} \
