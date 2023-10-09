@@ -50,6 +50,7 @@ runs:
       with:
         role-to-assume: ${{ inputs.AWS_ROLE_ARN }}
         aws-region: ${{ inputs.AWS_REGION }}
+        output-credentials: true
       
     - name: Run Runtime Action Deploy
       if: ${{ inputs.AWS_ROLE_ARN == 0 }}
