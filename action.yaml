@@ -12,25 +12,28 @@ inputs:
     required: true
   CLIENT_REALM:
     description: "CLIENT REALM"
-    required: true 
+    required: true
   REPOSITORY_NAME:
     description: "Git Repository Name"
-    required: true 
+    required: true
   AWS_ACCESS_KEY_ID:
     description: "AWS ACCESS KEY ID from console"
-    required: true 
+    required: false
   AWS_SECRET_ACCESS_KEY:
     description: "AWS SECRET ACCESS KEY from console"
-    required: true 
+    required: false
   AWS_SESSION_TOKEN:
     description: "AWS SESSION TOKEN from console"
-    required: true 
+    required: false
   AWS_REGION:
     description: "AWS REGION"
-    required: true 
+    required: true
+  AWS_ROLE_ARN:
+    description: "AWS ROLE ARN"
+    required: false
   RUN_TASK_ID:
     description: "Runtime Run Task Id"
-    required: true 
+    required: true
 
 runs:
   using: "composite"
@@ -40,7 +43,16 @@ runs:
       run: echo 🤖 OS runner is $(uname)
       shell: bash
       
-    - name: Run Runtime Action Destroy
+   - name: Configure aws credentials
+      id: aws-cred
+      if: ${{ inputs.ROLE_ARN != 0 }}
+      uses: aws-actions/configure-aws-credentials@v3
+      with:
+        role-to-assume: ${{ inputs.ROLE_ARN }}
+        aws-region: ${{ inputs.AWS_REGION }}
+      
+    - name: Run Runtime Action Deploy
+      if: ${{ inputs.ROLE_ARN == 0 }}
       run: |
         docker run --rm \
         -e FEATURES_LEVEL_LOG=${{ inputs.FEATURES_LEVEL_LOG }} \
@@ -60,6 +72,29 @@ runs:
         -e AWS_REGION=${{ inputs.AWS_REGION }} \
         --entrypoint=/app/stackspot-runtime-job-destroy \
         stackspot/runtime-job-destroy:latest start --run-task-id="${{ inputs.RUN_TASK_ID }}"
+      shell: bash
+
+    - name: Run Runtime Action Deploy
+      if: ${{ inputs.ROLE_ARN != 0 }}
+      run: |
+        docker run --rm \
+        -e FEATURES_LEVEL_LOG=${{ inputs.FEATURES_LEVEL_LOG }} \
+        -e AUTHENTICATE_CLIENT_ID=${{ inputs.CLIENT_ID }} \
+        -e AUTHENTICATE_CLIENT_SECRET=${{ inputs.CLIENT_KEY }} \
+        -e AUTHENTICATE_CLIENT_REALMS=${{ inputs.CLIENT_REALM }} \
+        -e AUTHENTICATE_URL="https://idm.stackspot.com" \
+        -e REPOSITORY_NAME=${{ inputs.REPOSITORY_NAME }} \
+        -e FEATURES_API_MANAGER="https://runtime-manager.v1.stackspot.com" \
+        -e FEATURES_BASEPATH_TMP="/tmp/runtime/deploys" \
+        -e FEATURES_BASEPATH_EBS="/opt/runtime" \
+        -e FEATURES_BACKEND_FILEPATH="/app/" \
+        -e FEATURES_BASEPATH_TERRAFORM="/root/.asdf/shims/terraform" \
+        -e AWS_ACCESS_KEY_ID=${{ steps.aws-cred.outputs.aws-access-key-id }} \
+        -e AWS_SECRET_ACCESS_KEY=${{ steps.aws-cred.outputs.aws-secret-access-key }} \
+        -e AWS_SESSION_TOKEN=${{ steps.aws-cred.outputs.aws-session-token }} \
+        -e AWS_REGION=${{ inputs.AWS_REGION }} \
+        --entrypoint=/app/stackspot-runtime-job-deploy \
+        stackspot/runtime-job-deploy:latest start --run-task-id="${{ inputs.RUN_TASK_ID }}"
       shell: bash
 
 branding:
