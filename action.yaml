@@ -43,7 +43,7 @@ runs:
       run: echo 🤖 OS runner is $(uname)
       shell: bash
       
-   - name: Configure aws credentials
+    - name: Configure aws credentials
       id: aws-cred
       if: ${{ inputs.ROLE_ARN != 0 }}
       uses: aws-actions/configure-aws-credentials@v3
