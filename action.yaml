@@ -34,6 +34,9 @@ inputs:
   RUN_TASK_ID:
     description: "Runtime Run Task Id"
     required: true
+  CONTAINER_URL:
+    description: "Destroy Container url"
+    default: stackspot/runtime-job-destroy
 
 runs:
   using: "composite"
@@ -52,7 +55,7 @@ runs:
         aws-region: ${{ inputs.AWS_REGION }}
         output-credentials: true
       
-    - name: Run Runtime Action Deploy
+    - name: Run Runtime Action Destroy
       if: ${{ inputs.AWS_ROLE_ARN == 0 }}
       run: |
         docker run --rm \
@@ -72,10 +75,10 @@ runs:
         -e AWS_SESSION_TOKEN=${{ inputs.AWS_SESSION_TOKEN }} \
         -e AWS_REGION=${{ inputs.AWS_REGION }} \
         --entrypoint=/app/stackspot-runtime-job-destroy \
-        stackspot/runtime-job-destroy:latest start --run-task-id="${{ inputs.RUN_TASK_ID }}"
+        ${{ inputs.CONTAINER_URL }}:latest start --run-task-id="${{ inputs.RUN_TASK_ID }}"
       shell: bash
 
-    - name: Run Runtime Action Deploy
+    - name: Run Runtime Action Destroy
       if: ${{ inputs.AWS_ROLE_ARN != 0 }}
       run: |
         docker run --rm \
@@ -94,8 +97,8 @@ runs:
         -e AWS_SECRET_ACCESS_KEY=${{ steps.aws-cred.outputs.aws-secret-access-key }} \
         -e AWS_SESSION_TOKEN=${{ steps.aws-cred.outputs.aws-session-token }} \
         -e AWS_REGION=${{ inputs.AWS_REGION }} \
-        --entrypoint=/app/stackspot-runtime-job-deploy \
-        stackspot/runtime-job-deploy:latest start --run-task-id="${{ inputs.RUN_TASK_ID }}"
+        --entrypoint=/app/stackspot-runtime-job-destroy \
+        ${{ inputs.CONTAINER_URL }}:latest start --run-task-id="${{ inputs.RUN_TASK_ID }}"
       shell: bash
 
 branding:
