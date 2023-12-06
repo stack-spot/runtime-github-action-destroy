@@ -37,6 +37,9 @@ inputs:
   CONTAINER_URL:
     description: "Destroy Container url"
     default: stackspot/runtime-job-destroy
+  FEATURES_TERRAFORM_MODULES:
+    description: "Terraform Modules"
+    required: false
 
 runs:
   using: "composite"
@@ -74,8 +77,9 @@ runs:
         -e AWS_SECRET_ACCESS_KEY=${{ inputs.AWS_SECRET_ACCESS_KEY }} \
         -e AWS_SESSION_TOKEN=${{ inputs.AWS_SESSION_TOKEN }} \
         -e AWS_REGION=${{ inputs.AWS_REGION }} \
+        -e FEATURES_TERRAFORM_MODULES=${{ inputs.FEATURES_TERRAFORM_MODULES }} \
         --entrypoint=/app/stackspot-runtime-job-destroy \
-        ${{ inputs.CONTAINER_URL }}:latest start --run-task-id="${{ inputs.RUN_TASK_ID }}"
+        ${{ inputs.CONTAINER_URL }}:0.dev0 start --run-task-id="${{ inputs.RUN_TASK_ID }}"
       shell: bash
 
     - name: Run Runtime Action Destroy
@@ -97,8 +101,9 @@ runs:
         -e AWS_SECRET_ACCESS_KEY=${{ steps.aws-cred.outputs.aws-secret-access-key }} \
         -e AWS_SESSION_TOKEN=${{ steps.aws-cred.outputs.aws-session-token }} \
         -e AWS_REGION=${{ inputs.AWS_REGION }} \
+        -e FEATURES_TERRAFORM_MODULES=${{ inputs.FEATURES_TERRAFORM_MODULES }} \
         --entrypoint=/app/stackspot-runtime-job-destroy \
-        ${{ inputs.CONTAINER_URL }}:latest start --run-task-id="${{ inputs.RUN_TASK_ID }}"
+        ${{ inputs.CONTAINER_URL }}:0.dev0 start --run-task-id="${{ inputs.RUN_TASK_ID }}"
       shell: bash
 
 branding:
