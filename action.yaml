@@ -34,6 +34,9 @@ inputs:
   RUN_TASK_ID:
     description: "Runtime Run Task Id"
     required: true
+  FEATURES_TERRAFORM_MODULES:
+    description: "Terraform Modules"
+    required: false
 
 runs:
   using: "composite"
@@ -71,6 +74,7 @@ runs:
         -e AWS_SECRET_ACCESS_KEY=${{ inputs.AWS_SECRET_ACCESS_KEY }} \
         -e AWS_SESSION_TOKEN=${{ inputs.AWS_SESSION_TOKEN }} \
         -e AWS_REGION=${{ inputs.AWS_REGION }} \
+        -e FEATURES_TERRAFORM_MODULES='${{ inputs.FEATURES_TERRAFORM_MODULES }}' \
         --entrypoint=/app/stackspot-runtime-job-destroy \
         stackspot/runtime-job-destroy:latest start --run-task-id="${{ inputs.RUN_TASK_ID }}"
       shell: bash
@@ -94,6 +98,7 @@ runs:
         -e AWS_SECRET_ACCESS_KEY=${{ steps.aws-cred.outputs.aws-secret-access-key }} \
         -e AWS_SESSION_TOKEN=${{ steps.aws-cred.outputs.aws-session-token }} \
         -e AWS_REGION=${{ inputs.AWS_REGION }} \
+        -e FEATURES_TERRAFORM_MODULES='${{ inputs.FEATURES_TERRAFORM_MODULES }}' \
         --entrypoint=/app/stackspot-runtime-job-deploy \
         stackspot/runtime-job-deploy:latest start --run-task-id="${{ inputs.RUN_TASK_ID }}"
       shell: bash
