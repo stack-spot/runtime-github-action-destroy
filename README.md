@@ -39,6 +39,8 @@ jobs:
           AWS_REGION: sa-east-1
           REPOSITORY_NAME: my-repository-name 
           RUN_TASK_ID: ${{ matrix.task.runTaskId }}
+          CONTAINER_URL: my/container-url # not mandatory
+
 ```
 
 * * *
@@ -56,6 +58,7 @@ Field | Mandatory | Observation
 **AWS_REGION** | YES | AWS region where resources with be provisioned. Used for tf backend as well (e.g: `us-east-1`).
 **RUN_TASK_ID** | YES | StackSpot Runtime task id to be executed, according to [runtime-manager-action](https://github.com/stack-spot/runtime-manager-action).
 **REPOSITORY_NAME** | YES | Repository name to checkout during task process.
+**CONTAINER_URL** | NO | Container url reference (e.g `stackspot/image`)
 
 * * *
 
