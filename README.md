@@ -40,7 +40,7 @@ jobs:
           REPOSITORY_NAME: my-repository-name 
           RUN_TASK_ID: ${{ matrix.task.runTaskId }}
           CONTAINER_URL: my/container-url # not mandatory
-
+          FEATURES_TERRAFORM_MODULES: ... # not mandatory
 ```
 
 * * *
@@ -49,16 +49,19 @@ jobs:
 
 Field | Mandatory | Observation
 ------------ | ------------  | -------------
+**FEATURES_LEVEL_LOG** | YES | Log Level
 **CLIENT_ID** | YES | [StackSpot](https://stackspot.com/en/settings/access-token) Client ID.
 **CLIENT_KEY** | YES | [StackSpot](https://stackspot.com/en/settings/access-token) Client KEY.
 **CLIENT_REALM** | YES | [StackSpot](https://stackspot.com/en/settings/access-token) Client Realm.
-**AWS_ACCESS_KEY_ID** | YES | [AWS](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-envvars.html) Access Key ID
-**AWS_SECRET_ACCESS_KEY** | YES | [AWS](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-envvars.html) Secret Access Key
-**AWS_SESSION_TOKEN** | YES | [AWS](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-envvars.html) Session Token
+**AWS_ACCESS_KEY_ID** | NO | [AWS](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-envvars.html) Access Key ID
+**AWS_SECRET_ACCESS_KEY** | NO | [AWS](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-envvars.html) Secret Access Key
+**AWS_SESSION_TOKEN** | NO | [AWS](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-envvars.html) Session Token
+**AWS_ROLE_ARN** | NO | AWS Role ARN
 **AWS_REGION** | YES | AWS region where resources with be provisioned. Used for tf backend as well (e.g: `us-east-1`).
 **RUN_TASK_ID** | YES | StackSpot Runtime task id to be executed, according to [runtime-manager-action](https://github.com/stack-spot/runtime-manager-action).
 **REPOSITORY_NAME** | YES | Repository name to checkout during task process.
 **CONTAINER_URL** | NO | Container url reference (e.g `stackspot/image`)
+**FEATURES_TERRAFORM_MODULES** | NO | List of external terraform modules allowed
 
 * * *
 
