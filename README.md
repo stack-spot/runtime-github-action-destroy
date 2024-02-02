@@ -36,6 +36,7 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
+          AWS_ROLE_ARN: ${{ secrets.AWS_ROLE_ARN }}
           AWS_REGION: sa-east-1
           REPOSITORY_NAME: my-repository-name 
           RUN_TASK_ID: ${{ matrix.task.runTaskId }}
@@ -56,7 +57,7 @@ Field | Mandatory | Observation
 **AWS_ACCESS_KEY_ID** | NO | [AWS](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-envvars.html) Access Key ID
 **AWS_SECRET_ACCESS_KEY** | NO | [AWS](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-envvars.html) Secret Access Key
 **AWS_SESSION_TOKEN** | NO | [AWS](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-envvars.html) Session Token
-**AWS_ROLE_ARN** | NO | AWS Role ARN
+**AWS_ROLE_ARN** | NO | AWS IAM ROLE (necessary if AWS credentials not informed)
 **AWS_REGION** | YES | AWS region where resources with be provisioned. Used for tf backend as well (e.g: `us-east-1`).
 **RUN_TASK_ID** | YES | StackSpot Runtime task id to be executed, according to [runtime-manager-action](https://github.com/stack-spot/runtime-manager-action).
 **REPOSITORY_NAME** | YES | Repository name to checkout during task process.
