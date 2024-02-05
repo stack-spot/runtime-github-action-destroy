@@ -27,7 +27,7 @@ jobs:
     steps:
       - name: DESTROY
         if: contains( matrix.task.taskType , 'DESTROY')
-        uses: stack-spot/runtime-destroy-action@v1
+        uses: stack-spot/runtime-destroy-action@v2
         with:
           FEATURES_LEVEL_LOG: debug
           CLIENT_ID: ${{ secrets.CLIENT_ID }}
