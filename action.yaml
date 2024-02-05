@@ -43,6 +43,7 @@ inputs:
   PATH_TO_MOUNT:
     description: "Path to mount inside the docker"
     required: true
+    default: ${{ github.workflow }}
 
 runs:
   using: "composite"
