@@ -40,6 +40,9 @@ inputs:
   FEATURES_TERRAFORM_MODULES:
     description: "Terraform Modules"
     required: false
+  PATH_TO_MOUNT:
+    description: "Path to mount inside the docker"
+    required: true
 
 runs:
   using: "composite"
@@ -62,6 +65,7 @@ runs:
       if: ${{ inputs.AWS_ROLE_ARN == 0 }}
       run: |
         docker run --rm \
+        -v ${{ inputs.PATH_TO_MOUNT }}:/app-volume  \
         -e FEATURES_LEVEL_LOG=${{ inputs.FEATURES_LEVEL_LOG }} \
         -e AUTHENTICATE_CLIENT_ID=${{ inputs.CLIENT_ID }} \
         -e AUTHENTICATE_CLIENT_SECRET=${{ inputs.CLIENT_KEY }} \
@@ -86,6 +90,7 @@ runs:
       if: ${{ inputs.AWS_ROLE_ARN != 0 }}
       run: |
         docker run --rm \
+        -v ${{ inputs.PATH_TO_MOUNT }}:/app-volume  \
         -e FEATURES_LEVEL_LOG=${{ inputs.FEATURES_LEVEL_LOG }} \
         -e AUTHENTICATE_CLIENT_ID=${{ inputs.CLIENT_ID }} \
         -e AUTHENTICATE_CLIENT_SECRET=${{ inputs.CLIENT_KEY }} \
