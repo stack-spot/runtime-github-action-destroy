@@ -42,8 +42,8 @@ inputs:
     required: false
   PATH_TO_MOUNT:
     description: "Path to mount inside the docker"
-    required: true
-    default: ${{ github.workflow }}
+    required: false
+    default: ${{ github.workspace }}
 
 runs:
   using: "composite"
@@ -61,6 +61,12 @@ runs:
         role-to-assume: ${{ inputs.AWS_ROLE_ARN }}
         aws-region: ${{ inputs.AWS_REGION }}
         output-credentials: true
+    
+    - name: Checkout
+      if: ${{ inputs.PATH_TO_MOUNT == github.workspace }}
+      uses: actions/checkout@v4
+      with:
+        ref: ${{ github.ref_name }}
       
     - name: Run Runtime Action Destroy
       if: ${{ inputs.AWS_ROLE_ARN == 0 }}
