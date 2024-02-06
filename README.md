@@ -42,7 +42,7 @@ jobs:
           RUN_TASK_ID: ${{ matrix.task.runTaskId }}
           CONTAINER_URL: my/container-url # not mandatory
           FEATURES_TERRAFORM_MODULES: ... # not mandatory
-          PATH_TO_MOUNT: ${{ github_workflow }}
+          PATH_TO_MOUNT: path/to/mount # not mandatory
 ```
 
 * * *
@@ -64,7 +64,7 @@ Field | Mandatory | Observation
 **REPOSITORY_NAME** | YES | Repository name to checkout during task process.
 **CONTAINER_URL** | NO | Container url reference (e.g `stackspot/image`)
 **FEATURES_TERRAFORM_MODULES** | NO | List of external terraform modules allowed
-**PATH_TO_MOUNT** | YES | Path provided to be used as a volume within the docker image that will be used with terraform
+**PATH_TO_MOUNT** | NO | Path provided to be used as a volume within the docker image that will be used with terraform
 
 * * *
 
