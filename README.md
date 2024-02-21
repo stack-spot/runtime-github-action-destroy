@@ -27,7 +27,7 @@ jobs:
     steps:
       - name: DESTROY
         if: contains( matrix.task.taskType , 'DESTROY')
-        uses: stack-spot/runtime-destroy-action@v1
+        uses: stack-spot/runtime-destroy-action@v2
         with:
           FEATURES_LEVEL_LOG: debug
           CLIENT_ID: ${{ secrets.CLIENT_ID }}
@@ -36,9 +36,13 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
+          AWS_ROLE_ARN: ${{ secrets.AWS_ROLE_ARN }}
           AWS_REGION: sa-east-1
           REPOSITORY_NAME: my-repository-name 
           RUN_TASK_ID: ${{ matrix.task.runTaskId }}
+          CONTAINER_URL: my/container-url # not mandatory
+          FEATURES_TERRAFORM_MODULES: ... # not mandatory
+          PATH_TO_MOUNT: path/to/mount
 ```
 
 * * *
@@ -54,12 +58,13 @@ Field | Mandatory | Observation
 **AWS_ACCESS_KEY_ID** | NO | [AWS](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-envvars.html) Access Key ID
 **AWS_SECRET_ACCESS_KEY** | NO | [AWS](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-envvars.html) Secret Access Key
 **AWS_SESSION_TOKEN** | NO | [AWS](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-envvars.html) Session Token
-**AWS_ROLE_ARN** | NO | AWS Role ARN
+**AWS_ROLE_ARN** | NO | AWS IAM ROLE (necessary if AWS credentials not informed)
 **AWS_REGION** | YES | AWS region where resources with be provisioned. Used for tf backend as well (e.g: `us-east-1`).
 **RUN_TASK_ID** | YES | StackSpot Runtime task id to be executed, according to [runtime-manager-action](https://github.com/stack-spot/runtime-manager-action).
 **REPOSITORY_NAME** | YES | Repository name to checkout during task process.
+**CONTAINER_URL** | NO | Container url reference (e.g `stackspot/image`)
 **FEATURES_TERRAFORM_MODULES** | NO | List of external terraform modules allowed
-
+**PATH_TO_MOUNT** | YES | Path provided to be used as a volume within the docker image that will be used with terraform
 
 * * *
 
