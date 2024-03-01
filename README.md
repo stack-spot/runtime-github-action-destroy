@@ -43,7 +43,7 @@ jobs:
           CONTAINER_URL: my/container-url # not mandatory
           FEATURES_TERRAFORM_MODULES: ... # not mandatory
           PATH_TO_MOUNT: path/to/mount
-          RELEASE_LOCALEXEC: true # not mandatory
+          LOCALEXEC_ENABLED: true # not mandatory
 ```
 
 * * *
@@ -66,7 +66,7 @@ Field | Mandatory | Observation
 **CONTAINER_URL** | NO | Container url reference (e.g `stackspot/image`)
 **FEATURES_TERRAFORM_MODULES** | NO | List of external terraform modules allowed
 **PATH_TO_MOUNT** | YES | Path provided to be used as a volume within the docker image that will be used with terraform
-**RELEASE_LOCALEXEC** | NO | whether or not terraform will be enable to perform local exec operations or not (default: `false`)
+**LOCALEXEC_ENABLED** | NO | whether or not terraform will be enable to perform local exec operations or not (default: `false`)
 
 * * *
 

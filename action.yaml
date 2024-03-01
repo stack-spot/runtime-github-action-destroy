@@ -44,7 +44,7 @@ inputs:
     description: "Path to mount inside the docker"
     required: true
     default: ${{ github.workspace }}
-  RELEASE_LOCALEXEC:
+  LOCALEXEC_ENABLED:
     description: "If Runtimes will allow execution of the local-exec command within terraform"
     required: false
     default: false
@@ -87,7 +87,7 @@ runs:
         -e AWS_SESSION_TOKEN=${{ inputs.AWS_SESSION_TOKEN }} \
         -e AWS_REGION=${{ inputs.AWS_REGION }} \
         -e FEATURES_TERRAFORM_MODULES='${{ inputs.FEATURES_TERRAFORM_MODULES }}' \
-        -e FEATURES_RELEASE_LOCALEXEC=${{ inputs.RELEASE_LOCALEXEC }} \
+        -e FEATURES_RELEASE_LOCALEXEC=${{ inputs.LOCALEXEC_ENABLED }} \
         --entrypoint=/app/stackspot-runtime-job-destroy \
         ${{ inputs.CONTAINER_URL }}:latest start --run-task-id="${{ inputs.RUN_TASK_ID }}"
       shell: bash
@@ -113,7 +113,7 @@ runs:
         -e AWS_SESSION_TOKEN=${{ steps.aws-cred.outputs.aws-session-token }} \
         -e AWS_REGION=${{ inputs.AWS_REGION }} \
         -e FEATURES_TERRAFORM_MODULES='${{ inputs.FEATURES_TERRAFORM_MODULES }}' \
-        -e FEATURES_RELEASE_LOCALEXEC=${{ inputs.RELEASE_LOCALEXEC }} \
+        -e FEATURES_RELEASE_LOCALEXEC=${{ inputs.LOCALEXEC_ENABLED }} \
         --entrypoint=/app/stackspot-runtime-job-destroy \
         ${{ inputs.CONTAINER_URL }}:latest start --run-task-id="${{ inputs.RUN_TASK_ID }}"
       shell: bash
