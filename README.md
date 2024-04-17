@@ -44,6 +44,7 @@ jobs:
           FEATURES_TERRAFORM_MODULES: ... # not mandatory
           PATH_TO_MOUNT: path/to/mount
           LOCALEXEC_ENABLED: true # not mandatory
+          TF_LOG_PROVIDER: info # not mandatory
 ```
 
 * * *
@@ -66,7 +67,8 @@ Field | Mandatory | Observation
 **CONTAINER_URL** | NO | Container url reference (e.g `stackspot/image`)
 **FEATURES_TERRAFORM_MODULES** | NO | List of external terraform modules allowed
 **PATH_TO_MOUNT** | YES | Path provided to be used as a volume within the docker image that will be used with terraform
-**LOCALEXEC_ENABLED** | NO | whether or not terraform will be enable to perform local exec operations or not (default: `false`)
+**LOCALEXEC_ENABLED** | NO | Whether or not terraform will be enable to perform local exec operations or not (default: `false`)
+**TF_LOG_PROVIDER** | NO | If there is a need to check Terraform's own log, it is now possible to pass the levels of the Terraform provider, allowing you to analyze what happens within Terraform's CLI (info, trace, debug and warn).
 
 * * *
 

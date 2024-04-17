@@ -33,10 +33,11 @@ inputs:
     required: false
   RUN_TASK_ID:
     description: "Runtime Run Task Id"
-    required: true
+    required: true 
   CONTAINER_URL:
     description: "Destroy Container url"
-    default: stackspot/runtime-job-destroy
+    default: stackspot/runtime-job-destroy:latest
+    required: false
   FEATURES_TERRAFORM_MODULES:
     description: "Terraform Modules"
     required: false
@@ -48,6 +49,9 @@ inputs:
     description: "If Runtimes will allow execution of the local-exec command within terraform"
     required: false
     default: false
+  TF_LOG_PROVIDER:
+    description: "Level tf log provider - info, debug, warn or trace"
+    required: false
 
 runs:
   using: "composite"
@@ -67,55 +71,43 @@ runs:
         output-credentials: true
       
     - name: Run Runtime Action Destroy
-      if: ${{ inputs.AWS_ROLE_ARN == 0 }}
       run: |
-        docker run --rm \
-        -v ${{ inputs.PATH_TO_MOUNT }}:/app-volume  \
+        FLAGS=$(echo "-v ${{ inputs.PATH_TO_MOUNT }}:/app-volume  \
         -e FEATURES_LEVEL_LOG=${{ inputs.FEATURES_LEVEL_LOG }} \
         -e AUTHENTICATE_CLIENT_ID=${{ inputs.CLIENT_ID }} \
         -e AUTHENTICATE_CLIENT_SECRET=${{ inputs.CLIENT_KEY }} \
         -e AUTHENTICATE_CLIENT_REALMS=${{ inputs.CLIENT_REALM }} \
-        -e AUTHENTICATE_URL="https://idm.stackspot.com" \
+        -e AUTHENTICATE_URL=https://idm.stackspot.com \
         -e REPOSITORY_NAME=${{ inputs.REPOSITORY_NAME }} \
-        -e FEATURES_API_MANAGER="https://runtime-manager.v1.stackspot.com" \
-        -e FEATURES_BASEPATH_TMP="/tmp/runtime/deploys" \
-        -e FEATURES_BASEPATH_EBS="/opt/runtime" \
-        -e FEATURES_TEMPLATES_FILEPATH="/app/" \
-        -e FEATURES_BASEPATH_TERRAFORM="/root/.asdf/shims/terraform" \
-        -e AWS_ACCESS_KEY_ID=${{ inputs.AWS_ACCESS_KEY_ID }} \
-        -e AWS_SECRET_ACCESS_KEY=${{ inputs.AWS_SECRET_ACCESS_KEY }} \
-        -e AWS_SESSION_TOKEN=${{ inputs.AWS_SESSION_TOKEN }} \
+        -e FEATURES_API_MANAGER=https://runtime-manager.v1.stackspot.com \
+        -e FEATURES_BASEPATH_TMP=/tmp/runtime/deploys \
+        -e FEATURES_BASEPATH_EBS=/opt/runtime \
+        -e FEATURES_TEMPLATES_FILEPATH=/app/ \
+        -e FEATURES_BASEPATH_TERRAFORM=/root/.asdf/shims/terraform \
         -e AWS_REGION=${{ inputs.AWS_REGION }} \
-        -e FEATURES_TERRAFORM_MODULES='${{ inputs.FEATURES_TERRAFORM_MODULES }}' \
-        -e FEATURES_RELEASE_LOCALEXEC=${{ inputs.LOCALEXEC_ENABLED }} \
-        --entrypoint=/app/stackspot-runtime-job-destroy \
-        ${{ inputs.CONTAINER_URL }}:latest start --run-task-id="${{ inputs.RUN_TASK_ID }}"
-      shell: bash
+        -e FEATURES_RELEASE_LOCALEXEC=${{ inputs.LOCALEXEC_ENABLED }}")
 
-    - name: Run Runtime Action Destroy
-      if: ${{ inputs.AWS_ROLE_ARN != 0 }}
-      run: |
+        if [ -z "${{ inputs.AWS_ROLE_ARN }}" ]; then
+          FLAGS=$(echo "$FLAGS -e AWS_ACCESS_KEY_ID=${{ inputs.AWS_ACCESS_KEY_ID }}")
+          FLAGS=$(echo "$FLAGS -e AWS_SECRET_ACCESS_KEY=${{ inputs.AWS_SECRET_ACCESS_KEY }}")
+          FLAGS=$(echo "$FLAGS -e AWS_SESSION_TOKEN=${{ inputs.AWS_SESSION_TOKEN }}")
+        fi
+
+        if [ ! -z "${{ inputs.AWS_ROLE_ARN }}" ]; then
+          FLAGS=$(echo "$FLAGS -e AWS_ACCESS_KEY_ID=${{ steps.aws-cred.outputs.aws-access-key-id }}")
+          FLAGS=$(echo "$FLAGS -e AWS_SECRET_ACCESS_KEY=${{ steps.aws-cred.outputs.aws-secret-access-key }}")
+          FLAGS=$(echo "$FLAGS -e AWS_SESSION_TOKEN=${{ steps.aws-cred.outputs.aws-session-token }}")
+        fi
+
+        if [ ! -z "${{ inputs.TF_LOG_PROVIDER }}" ]; then
+          FLAGS=$(echo "$FLAGS -e FEATURES_TERRAFORM_LOGPROVIDER=${{ inputs.TF_LOG_PROVIDER }}")
+        fi
+
         docker run --rm \
-        -v ${{ inputs.PATH_TO_MOUNT }}:/app-volume  \
-        -e FEATURES_LEVEL_LOG=${{ inputs.FEATURES_LEVEL_LOG }} \
-        -e AUTHENTICATE_CLIENT_ID=${{ inputs.CLIENT_ID }} \
-        -e AUTHENTICATE_CLIENT_SECRET=${{ inputs.CLIENT_KEY }} \
-        -e AUTHENTICATE_CLIENT_REALMS=${{ inputs.CLIENT_REALM }} \
-        -e AUTHENTICATE_URL="https://idm.stackspot.com" \
-        -e REPOSITORY_NAME=${{ inputs.REPOSITORY_NAME }} \
-        -e FEATURES_API_MANAGER="https://runtime-manager.v1.stackspot.com" \
-        -e FEATURES_BASEPATH_TMP="/tmp/runtime/deploys" \
-        -e FEATURES_BASEPATH_EBS="/opt/runtime" \
-        -e FEATURES_TEMPLATES_FILEPATH="/app/" \
-        -e FEATURES_BASEPATH_TERRAFORM="/root/.asdf/shims/terraform" \
-        -e AWS_ACCESS_KEY_ID=${{ steps.aws-cred.outputs.aws-access-key-id }} \
-        -e AWS_SECRET_ACCESS_KEY=${{ steps.aws-cred.outputs.aws-secret-access-key }} \
-        -e AWS_SESSION_TOKEN=${{ steps.aws-cred.outputs.aws-session-token }} \
-        -e AWS_REGION=${{ inputs.AWS_REGION }} \
+        $FLAGS \
         -e FEATURES_TERRAFORM_MODULES='${{ inputs.FEATURES_TERRAFORM_MODULES }}' \
-        -e FEATURES_RELEASE_LOCALEXEC=${{ inputs.LOCALEXEC_ENABLED }} \
         --entrypoint=/app/stackspot-runtime-job-destroy \
-        ${{ inputs.CONTAINER_URL }}:latest start --run-task-id="${{ inputs.RUN_TASK_ID }}"
+        ${{ inputs.CONTAINER_URL }} start --run-task-id="${{ inputs.RUN_TASK_ID }}"
       shell: bash
 
 branding:
