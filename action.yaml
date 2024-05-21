@@ -64,7 +64,7 @@ runs:
     - name: Configure aws credentials
       id: aws-cred
       if: ${{ inputs.AWS_ROLE_ARN != 0 }}
-      uses: aws-actions/configure-aws-credentials@v3
+      uses: aws-actions/configure-aws-credentials@v4
       with:
         role-to-assume: ${{ inputs.AWS_ROLE_ARN }}
         aws-region: ${{ inputs.AWS_REGION }}
