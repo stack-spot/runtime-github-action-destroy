@@ -98,7 +98,7 @@ runs:
         -e AUTHENTICATE_CLIENT_REALMS=${{ inputs.CLIENT_REALM }} \
         -e AUTHENTICATE_URL="https://account-keycloak.stg.stackspot.com" \
         -e REPOSITORY_NAME=${{ inputs.REPOSITORY_NAME }} \
-        -e FEATURES_API_MANAGER="http://runtime-manager.stg.stackspot.com" \
+        -e FEATURES_API_MANAGER="https://runtime-manager.stg.stackspot.com" \
         -e FEATURES_BASEPATH_TMP="/tmp/runtime/deploys" \
         -e FEATURES_BASEPATH_EBS="/opt/runtime" \
         -e FEATURES_TEMPLATES_FILEPATH="/app/" \
