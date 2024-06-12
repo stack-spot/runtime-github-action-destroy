@@ -36,7 +36,7 @@ inputs:
     required: true
   CONTAINER_URL:
     description: "Destroy Container url"
-    default: stackspot/runtime-job-destroy
+    default: stackspot/runtime-job-destroy:latest
   FEATURES_TERRAFORM_MODULES:
     description: "Terraform Modules"
     required: false
@@ -84,7 +84,7 @@ runs:
         -e AWS_REGION=${{ inputs.AWS_REGION }} \
         -e FEATURES_TERRAFORM_MODULES='${{ inputs.FEATURES_TERRAFORM_MODULES }}' \
         --entrypoint=/app/stackspot-runtime-job-destroy \
-        ${{ inputs.CONTAINER_URL }}:0.dev1 start --run-task-id="${{ inputs.RUN_TASK_ID }}"
+        ${{ inputs.CONTAINER_URL }} start --run-task-id="${{ inputs.RUN_TASK_ID }}"
       shell: bash
 
     - name: Run Runtime Action Destroy
@@ -109,7 +109,7 @@ runs:
         -e AWS_REGION=${{ inputs.AWS_REGION }} \
         -e FEATURES_TERRAFORM_MODULES='${{ inputs.FEATURES_TERRAFORM_MODULES }}' \
         --entrypoint=/app/stackspot-runtime-job-destroy \
-        ${{ inputs.CONTAINER_URL }}:0.dev1 start --run-task-id="${{ inputs.RUN_TASK_ID }}"
+        ${{ inputs.CONTAINER_URL }} start --run-task-id="${{ inputs.RUN_TASK_ID }}"
 
       shell: bash
 
